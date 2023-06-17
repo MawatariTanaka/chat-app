@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Contact from "./Contact";
 import Message from "./Message";
 
-export default function Chatroom({ user, headerHeight }) {
+export default function Chatroom({ user }) {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,10 +13,7 @@ export default function Chatroom({ user, headerHeight }) {
     }, [user]);
 
     return (
-        <div
-            className="chatroom-container"
-            style={{ height: `calc(100vh - ${headerHeight}px)` }}
-        >
+        <div className="chatroom-container" style={{ height: "91vh" }}>
             <Contact />
             <Message />
         </div>

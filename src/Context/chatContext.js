@@ -1,23 +1,16 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-    currentMessagingUser: "",
-    currentDialogue: [],
+    currentRoomId: "",
 };
 
 const chatReducer = (state, action) => {
     switch (action.type) {
-        case "CHANGE_USER":
-            const { user, chat } = action.payload;
+        case "CHANGE_ROOM":
             return {
                 ...state,
-                currentMessagingUser: user,
-                currentDialogue: chat ? chat.messages : [],
+                currentRoomId: action.payload,
             };
-        case "SEND_MESSAGE":
-            return { ...state, currentDialogue: action.payload.messages };
-        case "RESET":
-            return initialState;
         default:
             return state;
     }

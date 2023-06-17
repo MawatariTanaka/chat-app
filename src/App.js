@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import AppHeader from "./Components/AppHeader";
 import Chatroom from "./Components/Chatroom";
 import SignIn from "./Components/SignIn";
 import Register from "./Components/Register";
@@ -27,11 +28,9 @@ export { app, auth, db };
 
 function App() {
     const [user, setUser] = useState(null);
-    const [headerHeight, setHeaderHeight] = useState(0);
-    const headerRef = useRef(null);
 
     useEffect(() => {
-        setHeaderHeight(headerRef.current.clientHeight);
+        auth.signOut();
     }, []);
 
     onAuthStateChanged(auth, (user) => {
@@ -42,24 +41,12 @@ function App() {
         }
     });
 
-    const handleSignOut = () => {
-        auth.signOut();
-    };
-
     return (
         <div className="App">
-            <header ref={headerRef}>
-                <h1>Chat App 🔥</h1>
-                {user && <button onClick={handleSignOut}>Sign Out</button>}
-            </header>
+            <AppHeader user={user} />
             <main>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Chatroom user={user} headerHeight={headerHeight} />
-                        }
-                    />
+                    <Route path="/" element={<Chatroom user={user} />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/signin" element={<SignIn />} />
                 </Routes>
