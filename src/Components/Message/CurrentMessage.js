@@ -1,130 +1,85 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Input, Button, Layout, Form } from "antd";
 import { auth, db } from "../../App";
 import {
+    collection,
     doc,
-    getDoc,
-    setDoc,
-    updateDoc,
     arrayUnion,
+    updateDoc,
     onSnapshot,
+    query,
+    where,
 } from "firebase/firestore";
 import { ChatContext } from "../../Context/chatContext";
+const { Header, Content, Footer } = Layout;
 
 export default function CurrentMessage() {
-    function handleSendingMessage(e) {
-        e.preventDefault();
-        const sender = auth.currentUser.uid;
-        const receiver = currentMessagingUser.id;
-        const combinedId =
-            sender > receiver ? `${sender}${receiver}` : `${receiver}${sender}`;
-        const currentMessage = {
-            sender: sender,
-            text: message,
-        };
-        const chatRef = doc(db, "chats", combinedId);
-        getDoc(chatRef)
-            .then((docSnapshot) => {
-                if (docSnapshot.exists()) {
-                    updateDoc(chatRef, {
-                        messages: arrayUnion(currentMessage),
-                    });
-                } else {
-                    setDoc(chatRef, {
-                        messages: [currentMessage],
-                    });
-                    const userRef = doc(db, "users", sender);
-                    getDoc(userRef).then((docSnapshot) => {
-                        if (docSnapshot.exists()) {
-                            updateDoc(userRef, {
-                                currentDialogue: arrayUnion(combinedId),
-                            });
-                        } else {
-                            setDoc(userRef, {
-                                currentDialogue: [combinedId],
-                            });
-                        }
-                    });
-                    const messagingUserRef = doc(db, "users", receiver);
-                    getDoc(messagingUserRef).then((docSnapshot) => {
-                        if (docSnapshot.exists()) {
-                            updateDoc(messagingUserRef, {
-                                currentDialogue: arrayUnion(combinedId),
-                            });
-                        } else {
-                            setDoc(messagingUserRef, {
-                                currentDialogue: [combinedId],
-                            });
-                        }
-                    });
-                }
-            })
-            .then(() => {
-                setMessage("");
-            });
-    }
-
-    const [chats, setChats] = useState([]);
-    const { currentMessagingUser } = useContext(ChatContext);
-    const [message, setMessage] = useState("");
-    const userPhoto =
-        currentMessagingUser.photoURL ||
-        `${process.env.PUBLIC_URL}/icon/profile-user.png`;
-
+    const { currentRoomId } = useContext(ChatContext);
+    const [roomName, setRoomName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [text, setText] = useState("");
     useEffect(() => {
-        const getChats = () => {
-            const sender = auth.currentUser.uid;
-            const receiver = currentMessagingUser.id;
-            const combinedId =
-                sender > receiver
-                    ? `${sender}${receiver}`
-                    : `${receiver}${sender}`;
-            const unsub = onSnapshot(doc(db, "chats", combinedId), (doc) => {
-                setChats(doc.data().messages);
-            });
-            return () => {
-                unsub();
-            };
-        };
-        getChats();
-    }, [currentMessagingUser]);
+        const roomRef = doc(db, "rooms", currentRoomId);
+        onSnapshot(roomRef, (doc) => {
+            setRoomName(doc.data().roomName);
+            setMessages(doc.data().messages);
+            console.log(doc.data());
+        });
+    }, [currentRoomId]);
 
-    console.log(chats);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log("run");
+        const newMessage = {
+            sender: auth.currentUser.uid,
+            text: text,
+        };
+        const roomRef = doc(db, "rooms", currentRoomId);
+        await updateDoc(roomRef, {
+            messages: arrayUnion(newMessage),
+        });
+        setText("");
+    };
 
     return (
-        <>
-            <div className="message-user-to">
-                <img className="message-user-img" src={userPhoto} />
-                <p className="message-user-name">
-                    {currentMessagingUser.username}
-                </p>
-            </div>
-            <div className="dialogue">
-                {chats.map((messageObj, index) => (
-                    <div
-                        key={index}
-                        className={`dialogue-row ${
-                            messageObj.sender === auth.currentUser.uid
-                                ? "dialogue-sender-row"
-                                : "dialogue-receiver-row"
-                        }`}
-                    >
-                        <p>{messageObj.text}</p>
-                    </div>
-                ))}
-            </div>
-            <form className="message-box">
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <button type="submit" onClick={handleSendingMessage}>
-                    <img
-                        src={`${process.env.PUBLIC_URL}/icon/send-message.png`}
-                        alt="send"
+        <Layout>
+            <Header className="message-header">{roomName}</Header>
+            <Content className="message-container">
+                {auth.currentUser.uid &&
+                    messages.map((message, index) => (
+                        <div
+                            key={index}
+                            style={
+                                auth.currentUser.uid == message.sender
+                                    ? {
+                                          alignSelf: "flex-end",
+                                          background:
+                                              "linear-gradient(to left, #0a618c, #34c0db)",
+                                          color: "white",
+                                      }
+                                    : {}
+                            }
+                        >
+                            {message.text}
+                        </div>
+                    ))}
+            </Content>
+            <Footer style={{ display: "flex", alignItems: "center" }}>
+                <form
+                    onSubmit={handleSubmit}
+                    style={{ display: "flex", flex: 1 }}
+                >
+                    <Input
+                        placeholder="Type your message here"
+                        value={text}
+                        onChange={(event) => setText(event.target.value)}
+                        style={{ marginRight: "10px" }}
                     />
-                </button>
-            </form>
-        </>
+                    <Button type="primary" htmlType="submit">
+                        Send
+                    </Button>
+                </form>
+            </Footer>
+        </Layout>
     );
 }

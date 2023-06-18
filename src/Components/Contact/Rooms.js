@@ -31,7 +31,11 @@ export default function Rooms() {
             )
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const rooms = querySnapshot.docs.map((doc) => doc.data());
+            const rooms = querySnapshot.docs.map((doc) => {
+                const data = doc.data();
+                data.id = doc.id;
+                return data;
+            });
             setAvailableRooms(rooms);
         });
 
@@ -56,13 +60,19 @@ export default function Rooms() {
             <List
                 itemLayout="horizontal"
                 dataSource={availableRooms}
-                renderItem={({ host, roomName, coverPhotoURL }) => (
+                renderItem={({ host, roomName, coverPhotoURL, id }) => (
                     <List.Item
                         className="list-room"
                         style={{
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "left",
+                        }}
+                        onClick={() => {
+                            dispatch({
+                                type: "CHANGE_ROOM",
+                                payload: id,
+                            });
                         }}
                     >
                         <Avatar

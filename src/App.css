@@ -150,84 +150,24 @@ h2 {
     font-weight: bold;
 }
 
-.message-user-to {
-    padding: 0.5rem;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    background: linear-gradient(
-        to bottom right,
-        var(--light-blue-main),
-        var(--light-blue-secondary)
-    );
-}
-
-.message-user-img {
-    width: 50px;
-    margin: 0 1rem;
-}
-
-.message-user-name {
+.message-header {
+    background: linear-gradient(to right, #0a618c, #34c0db);
+    color: white;
     font-weight: bold;
+    font-size: 2em;
 }
 
-.dialogue {
-    padding: 0.5rem;
-    padding-bottom: 2rem;
-    width: 100%;
-    height: 20rem;
-    overflow-y: auto;
+.message-container {
     display: flex;
     flex-direction: column;
+    background: white;
 }
 
-.dialogue-row {
+.message-container div {
     width: fit-content;
     padding: 0.5rem;
-    margin: 0.2rem 0;
-    border-radius: 0.5rem;
-}
-
-.dialogue-sender-row {
-    margin-left: auto;
-    background: linear-gradient(
-        to left,
-        var(--light-blue-main),
-        var(--light-blue-secondary)
-    );
-}
-
-.dialogue-receiver-row {
-    margin-right: auto;
-    background: white;
+    margin: 0.25rem;
+    border-radius: 0.25rem;
     color: black;
-}
-
-.message-box {
-    position: absolute;
-    bottom: 0;
-    width: inherit;
-    padding: 0.5rem;
-    display: flex;
-    background-color: white;
-}
-
-.message-box input {
-    width: 100%;
-    font-size: 1.2rem;
-    padding: 0.5rem;
-    margin-right: 0.5rem;
-    border: none;
-    border-radius: 1rem;
-    outline: none;
     background-color: var(--light-grey);
-}
-
-.message-box button {
-    padding: 0.5rem;
-    background-color: var(--light-grey);
-}
-
-.message-box button img {
-    width: 2rem;
 }
