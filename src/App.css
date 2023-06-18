@@ -25,7 +25,6 @@ html {
         var(--dark-blue-secondary)
     );
     color: white;
-    overflow: hidden;
 }
 
 header {
@@ -97,6 +96,10 @@ h2 {
     grid-template-columns: 1fr 4fr;
 }
 
+.contact {
+    overflow-y: scroll;
+}
+
 .list-room {
     background: linear-gradient(to right, #0a618c, #34c0db);
     margin: 1rem;
@@ -113,37 +116,18 @@ h2 {
     color: white;
 }
 
-.search-contact {
-    width: 100%;
-    padding: 0.5rem;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid white;
-    outline: none;
-    color: white;
-}
-
-.searched-users {
-    border-bottom: 2px solid white;
-}
-
-.suggested-user {
-    padding: 0.5rem 1rem;
-    margin: 0.25rem 0;
-    border-radius: 1rem;
+.list-invitation {
     display: flex;
-    justify-content: left;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background: linear-gradient(
-        to bottom right,
-        var(--light-blue-main),
-        var(--light-blue-secondary)
-    );
 }
 
-.suggested-user-img {
-    width: 50px;
-    margin-right: 1rem;
+.invitation {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .messaging-space {

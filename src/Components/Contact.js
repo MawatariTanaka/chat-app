@@ -5,7 +5,7 @@ import Rooms from "./Contact/Rooms";
 
 export default function Contact() {
     return (
-        <div>
+        <div className="contact">
             <Row>
                 <Col span={24}>
                     <Rooms />
