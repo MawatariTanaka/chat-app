@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Input, Select, Switch, Button } from "antd";
+import { v4 as uuidv4 } from "uuid";
 import { auth, db } from "../../App";
 import {
     collection,
@@ -7,8 +8,10 @@ import {
     doc,
     getDoc,
     getDocs,
-    addDoc,
+    setDoc,
+    serverTimestamp,
 } from "firebase/firestore";
+import { ChatContext } from "../../Context/chatContext";
 
 const { Option } = Select;
 
@@ -18,6 +21,7 @@ export default function CreateMessage() {
     const [roomName, setRoomName] = useState("");
     const [otherPlayer, setOtherPlayer] = useState(["", ""]);
     const [privateRoom, setPrivateRoom] = useState(false);
+    const { dispatch } = useContext(ChatContext);
 
     const onFinish = async () => {
         const otherPlayerName = await getDoc(
@@ -30,19 +34,26 @@ export default function CreateMessage() {
             }
         });
 
+        const roomId = uuidv4();
+        const timestamp = serverTimestamp();
+
         const roomData = {
             coverPhotoURL: "https://i.pravatar.cc/30",
+            createdAt: timestamp,
             host: auth.currentUser.displayName,
             host_id: auth.currentUser.uid,
-            message: [],
+            messages: [],
             player: otherPlayerName,
             player_id: otherPlayer,
             private: privateRoom,
             roomName: roomName,
         };
 
-        await addDoc(collection(db, "rooms"), roomData).then(() => {
-            form.resetFields();
+        await setDoc(doc(db, "rooms", roomId), roomData).then(() => {
+            dispatch({
+                type: "CHANGE_ROOM",
+                payload: roomId,
+            });
         });
     };
 
