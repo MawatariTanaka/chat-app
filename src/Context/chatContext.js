@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
+    showRoomDetail: false,
     currentRoomId: "",
 };
 
@@ -10,6 +11,11 @@ const chatReducer = (state, action) => {
             return {
                 ...state,
                 currentRoomId: action.payload,
+            };
+        case "CHANGE_SHOW_STATUS":
+            return {
+                ...state,
+                showRoomDetail: action.payload,
             };
         default:
             return state;

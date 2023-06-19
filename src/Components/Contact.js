@@ -11,12 +11,6 @@ export default function Contact() {
                     <Rooms />
                 </Col>
             </Row>
-            <Divider style={{ background: "white" }} />
-            <Row>
-                <Col span={24}>
-                    <Invitations />
-                </Col>
-            </Row>
         </div>
     );
 }

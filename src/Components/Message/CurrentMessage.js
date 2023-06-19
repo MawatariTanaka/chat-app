@@ -7,11 +7,12 @@ import {
     arrayUnion,
     updateDoc,
     onSnapshot,
-    query,
-    where,
+    getDoc,
 } from "firebase/firestore";
 import { ChatContext } from "../../Context/chatContext";
-const { Header, Content, Footer } = Layout;
+import CustomHeader from "./CustomHeader"; // import the custom header
+
+const { Content, Footer } = Layout;
 
 export default function CurrentMessage() {
     const { currentRoomId } = useContext(ChatContext);
@@ -23,27 +24,35 @@ export default function CurrentMessage() {
         onSnapshot(roomRef, (doc) => {
             setRoomName(doc.data().roomName);
             setMessages(doc.data().messages);
-            console.log(doc.data());
         });
     }, [currentRoomId]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("run");
         const newMessage = {
             sender: auth.currentUser.uid,
             text: text,
         };
         const roomRef = doc(db, "rooms", currentRoomId);
-        await updateDoc(roomRef, {
-            messages: arrayUnion(newMessage),
-        });
+        const roomSnapshot = await getDoc(roomRef);
+        const inChatArr = roomSnapshot.data().in_chat;
+
+        if (!inChatArr.includes(auth.currentUser.uid)) {
+            await updateDoc(roomRef, {
+                messages: arrayUnion(newMessage),
+            });
+        } else {
+            await updateDoc(roomRef, {
+                messages: arrayUnion(newMessage),
+                in_chat: arrayUnion(auth.currentUser.uid),
+            });
+        }
         setText("");
     };
 
     return (
         <Layout>
-            <Header className="message-header">{roomName}</Header>
+            <CustomHeader roomName={roomName} /> {/* use the custom header */}
             <Content className="message-container">
                 {auth.currentUser.uid &&
                     messages.map((message, index) => (

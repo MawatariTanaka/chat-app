@@ -42,6 +42,7 @@ export default function CreateMessage() {
             createdAt: timestamp,
             host: auth.currentUser.displayName,
             host_id: auth.currentUser.uid,
+            in_chat: [auth.currentUser.uid, otherPlayer],
             messages: [],
             player: otherPlayerName,
             player_id: otherPlayer,

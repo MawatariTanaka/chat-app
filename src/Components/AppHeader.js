@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Layout, Menu, Dropdown, Space } from "antd";
 import {
@@ -8,10 +9,12 @@ import {
     SmileOutlined,
 } from "@ant-design/icons";
 import { auth } from "../App";
+import { ChatContext } from "../Context/chatContext";
 
 const { Header } = Layout;
 
 function AppHeader() {
+    const { dispatch } = useContext(ChatContext);
     const navigate = useNavigate();
     const handleSignOut = () => {
         auth.signOut();
@@ -34,7 +37,18 @@ function AppHeader() {
         {
             key: "create-room",
             icon: <PlusOutlined />,
-            label: <span>Create Room</span>,
+            label: (
+                <span
+                    onClick={() => {
+                        dispatch({
+                            type: "CHANGE_ROOM",
+                            payload: "add-room",
+                        });
+                    }}
+                >
+                    Add Room
+                </span>
+            ),
         },
         {
             key: "sign-out",

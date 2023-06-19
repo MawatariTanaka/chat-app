@@ -3,19 +3,15 @@ import { Button, List, Avatar, Row, Col } from "antd";
 
 const data = [
     {
-        invitor: "John",
+        inviter: "John",
         avatarUrl: "https://i.pravatar.cc/50",
     },
     {
-        invitor: "Jane",
+        inviter: "Jane",
         avatarUrl: "https://i.pravatar.cc/51",
     },
     {
-        invitor: "Bob",
-        avatarUrl: "https://i.pravatar.cc/52",
-    },
-    {
-        invitor: "Bob",
+        inviter: "Bob",
         avatarUrl: "https://i.pravatar.cc/52",
     },
 ];
@@ -26,7 +22,7 @@ export default function Invitations() {
             <Col>
                 <Row style={{ color: "white" }}>
                     <Avatar src={item.avatarUrl} />
-                    <div>{item.invitor}</div>
+                    <div>{item.inviter}</div>
                 </Row>
                 <Row style={{ marginTop: "8px" }}>
                     <Button type="primary" style={{ backgroundColor: "green" }}>
