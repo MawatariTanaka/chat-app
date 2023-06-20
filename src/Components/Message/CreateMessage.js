@@ -38,11 +38,17 @@ export default function CreateMessage() {
         const timestamp = serverTimestamp();
 
         const roomData = {
-            coverPhotoURL: "https://i.pravatar.cc/30",
+            coverPhotoURL: auth.currentUser.photoURL,
             createdAt: timestamp,
             host: auth.currentUser.displayName,
             host_id: auth.currentUser.uid,
-            in_chat: [auth.currentUser.uid, otherPlayer],
+            in_chat: [
+                {
+                    id: auth.currentUser.uid,
+                    username: auth.currentUser.displayName,
+                    photoURL: auth.currentUser.photoURL,
+                },
+            ],
             messages: [],
             player: otherPlayerName,
             player_id: otherPlayer,

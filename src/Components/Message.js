@@ -13,14 +13,12 @@ export default function Message() {
                 {currentRoomId === "add-room" ? (
                     <CreateMessage />
                 ) : currentRoomId ? (
-                    <>
-                        <CurrentMessage />
-                        <MessageDetail />
-                    </>
+                    <CurrentMessage />
                 ) : (
                     <BlankMessage />
                 )}
             </div>
+            {currentRoomId && currentRoomId !== "add-room" && <MessageDetail />}
         </div>
     );
 }

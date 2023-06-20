@@ -1,16 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Input, Button, Layout, Form } from "antd";
+import { Input, Button, Layout } from "antd";
 import { auth, db } from "../../App";
-import {
-    collection,
-    doc,
-    arrayUnion,
-    updateDoc,
-    onSnapshot,
-    getDoc,
-} from "firebase/firestore";
+import { doc, arrayUnion, updateDoc, onSnapshot } from "firebase/firestore";
 import { ChatContext } from "../../Context/chatContext";
-import CustomHeader from "./CustomHeader"; // import the custom header
+import CustomHeader from "./CustomHeader";
 
 const { Content, Footer } = Layout;
 
@@ -34,25 +27,25 @@ export default function CurrentMessage() {
             text: text,
         };
         const roomRef = doc(db, "rooms", currentRoomId);
-        const roomSnapshot = await getDoc(roomRef);
-        const inChatArr = roomSnapshot.data().in_chat;
 
-        if (!inChatArr.includes(auth.currentUser.uid)) {
-            await updateDoc(roomRef, {
-                messages: arrayUnion(newMessage),
-            });
-        } else {
-            await updateDoc(roomRef, {
-                messages: arrayUnion(newMessage),
-                in_chat: arrayUnion(auth.currentUser.uid),
-            });
-        }
+        await updateDoc(roomRef, {
+            messages: arrayUnion(newMessage),
+            in_chat: arrayUnion({
+                id: auth.currentUser.uid,
+                username: auth.currentUser.displayName,
+                photoURL: auth.currentUser.photoURL,
+            }),
+        });
         setText("");
     };
 
+    if (!auth.currentUser) {
+        return null;
+    }
+
     return (
         <Layout>
-            <CustomHeader roomName={roomName} /> {/* use the custom header */}
+            <CustomHeader roomName={roomName} />
             <Content className="message-container">
                 {auth.currentUser.uid &&
                     messages.map((message, index) => (
@@ -73,7 +66,12 @@ export default function CurrentMessage() {
                         </div>
                     ))}
             </Content>
-            <Footer style={{ display: "flex", alignItems: "center" }}>
+            <Footer
+                style={{
+                    position: "sticky",
+                    bottom: 0,
+                }}
+            >
                 <form
                     onSubmit={handleSubmit}
                     style={{ display: "flex", flex: 1 }}

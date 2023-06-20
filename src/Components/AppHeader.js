@@ -15,17 +15,12 @@ const { Header } = Layout;
 
 function AppHeader() {
     const { dispatch } = useContext(ChatContext);
-    const navigate = useNavigate();
     const handleSignOut = () => {
+        dispatch({
+            type: "CHANGE_ROOM",
+            payload: "",
+        });
         auth.signOut();
-    };
-
-    const handleSignIn = () => {
-        navigate("/signin");
-    };
-
-    const handleRegister = () => {
-        navigate("/register");
     };
 
     const authenticatedMenuItems = [

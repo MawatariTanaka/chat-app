@@ -25,6 +25,7 @@ html {
         var(--dark-blue-secondary)
     );
     color: white;
+    overflow-y: hidden;
 }
 
 header {
@@ -118,6 +119,8 @@ h2 {
 
 .messaging-container {
     position: relative;
+    overflow-y: scroll;
+    display: flex;
 }
 
 .messaging-space {
@@ -141,6 +144,8 @@ h2 {
 }
 
 .message-header {
+    position: sticky;
+    top: 0;
     background: linear-gradient(to right, #0a618c, #34c0db);
     color: white;
     font-weight: bold;
@@ -166,23 +171,18 @@ h2 {
 }
 
 .messaging-detail-layout {
-    position: absolute;
-    right: 0;
+    position: sticky;
     top: 0;
-    width: 30%;
+    width: 40%;
     color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .messaging-detail-header {
-    background-color: var(--light-grey);
-    font-size: 1.5em;
-    font-weight: bold;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--light-grey);
+    font-size: 1.5em;
+    font-weight: bold;
 }
