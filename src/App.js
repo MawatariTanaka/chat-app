@@ -55,13 +55,20 @@ function App() {
                         element={
                             <PrivateRoute
                                 user={user}
-                                element={<Chatroom user={user} />}
+                                element={
+                                    <>
+                                        <Route
+                                            path="/profile"
+                                            element={<Profile />}
+                                        />
+                                        <Chatroom user={user} />
+                                    </>
+                                }
                             />
                         }
                     />
                     <Route path="/register" element={<Register />} />
                     <Route path="/signin" element={<SignIn />} />
-                    <Route path="/profile" element={<Profile />} />
                 </Routes>
             </main>
         </div>
