@@ -8,15 +8,22 @@ import CustomHeader from "./CustomHeader";
 const { Content, Footer } = Layout;
 
 export default function CurrentMessage() {
-    const { currentRoomId } = useContext(ChatContext);
+    const { currentRoomId, dispatch } = useContext(ChatContext);
     const [roomName, setRoomName] = useState("");
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     useEffect(() => {
         const roomRef = doc(db, "rooms", currentRoomId);
         onSnapshot(roomRef, (doc) => {
-            setRoomName(doc.data().roomName);
-            setMessages(doc.data().messages);
+            const roomData = doc.data();
+            if (roomData.ban.includes(auth.currentUser.uid)) {
+                dispatch({
+                    type: "CHANGE_ROOM",
+                    payload: "",
+                });
+            }
+            setRoomName(roomData.roomName);
+            setMessages(roomData.messages);
         });
     }, [currentRoomId]);
 

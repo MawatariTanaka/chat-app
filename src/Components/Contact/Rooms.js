@@ -8,6 +8,7 @@ import {
     doc,
     query,
     or,
+    and,
 } from "firebase/firestore"; // updated import
 import { auth, db } from "../../App";
 import { ChatContext } from "../../Context/chatContext";
@@ -24,10 +25,12 @@ export default function Rooms() {
 
         const q = query(
             collection(db, "rooms"),
-            or(
-                where("host_id", "==", userId),
-                where("player_id", "==", userId),
-                where("private", "==", false)
+            and(
+                or(
+                    where("host_id", "==", userId),
+                    where("player_id", "==", userId),
+                    where("private", "==", false)
+                )
             )
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {

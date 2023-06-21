@@ -81,7 +81,20 @@ export default function MessageDetail() {
 
                             {hostData.id === auth.currentUser.uid &&
                                 user.id !== auth.currentUser.uid && (
-                                    <Button>Ban</Button>
+                                    <Button
+                                        danger
+                                        onClick={() =>
+                                            dispatch({
+                                                type: "CHANGE_GOING_TO_BAN",
+                                                payload: {
+                                                    id: user.id,
+                                                    username: user.username,
+                                                },
+                                            })
+                                        }
+                                    >
+                                        Ban
+                                    </Button>
                                 )}
                         </div>
                     ))}

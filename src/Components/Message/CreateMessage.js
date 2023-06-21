@@ -24,6 +24,18 @@ export default function CreateMessage() {
     const { dispatch } = useContext(ChatContext);
 
     const onFinish = async () => {
+        const currentBan = await getDoc(
+            doc(db, "users", auth.currentUser.uid)
+        ).then((doc) => {
+            if (doc.exists()) {
+                return doc.data().ban || ["0"];
+            } else {
+                throw new Error(
+                    `No user found with uid ${auth.currentUser.uid}`
+                );
+            }
+        });
+
         const otherPlayerName = await getDoc(
             doc(db, "users", otherPlayer)
         ).then((doc) => {
@@ -33,11 +45,11 @@ export default function CreateMessage() {
                 throw new Error(`No user found with uid ${otherPlayer}`);
             }
         });
-
         const roomId = uuidv4();
         const timestamp = serverTimestamp();
 
         const roomData = {
+            ban: currentBan,
             coverPhotoURL: auth.currentUser.photoURL,
             createdAt: timestamp,
             host: auth.currentUser.displayName,

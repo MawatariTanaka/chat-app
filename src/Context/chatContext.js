@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 const initialState = {
     showRoomDetail: false,
     currentRoomId: "",
+    goingToBan: "",
 };
 
 const chatReducer = (state, action) => {
@@ -16,6 +17,11 @@ const chatReducer = (state, action) => {
             return {
                 ...state,
                 showRoomDetail: action.payload,
+            };
+        case "CHANGE_GOING_TO_BAN":
+            return {
+                ...state,
+                goingToBan: action.payload,
             };
         default:
             return state;

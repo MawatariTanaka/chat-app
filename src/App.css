@@ -186,3 +186,15 @@ h2 {
     font-size: 1.5em;
     font-weight: bold;
 }
+
+.going-to-ban-alert {
+    width: 30%;
+    padding: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 2rem;
+    background-color: var(--grey);
+    color: black;
+}

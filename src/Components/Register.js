@@ -27,6 +27,7 @@ export default function Register() {
                     email: user.email,
                     username: username,
                     photoURL: "",
+                    ban: [],
                 });
                 dispatch({ type: "RESET" });
                 navigate("/");
