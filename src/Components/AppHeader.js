@@ -1,15 +1,14 @@
-import { useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Layout, Menu, Dropdown, Space } from "antd";
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Layout, Dropdown, Space } from 'antd';
 import {
     UserOutlined,
     LogoutOutlined,
     PlusOutlined,
     DownOutlined,
-    SmileOutlined,
-} from "@ant-design/icons";
-import { auth } from "../App";
-import { ChatContext } from "../Context/chatContext";
+} from '@ant-design/icons';
+import { auth } from '../App';
+import { ChatContext } from '../Context/chatContext';
 
 const { Header } = Layout;
 
@@ -17,36 +16,37 @@ function AppHeader() {
     const { dispatch } = useContext(ChatContext);
     const handleSignOut = () => {
         dispatch({
-            type: "CHANGE_ROOM",
-            payload: "",
+            type: 'CHANGE_ROOM',
+            payload: '',
         });
         auth.signOut();
     };
 
     const authenticatedMenuItems = [
         {
-            key: "profile",
+            key: 'profile',
             icon: <UserOutlined />,
-            label: <span>Profile</span>,
+            label: <Link to="/profile">Profile</Link>,
         },
         {
-            key: "create-room",
+            key: 'create-room',
             icon: <PlusOutlined />,
             label: (
-                <span
+                <Link
+                    to="/"
                     onClick={() => {
                         dispatch({
-                            type: "CHANGE_ROOM",
-                            payload: "add-room",
+                            type: 'CHANGE_ROOM',
+                            payload: 'add-room',
                         });
                     }}
                 >
                     Add Room
-                </span>
+                </Link>
             ),
         },
         {
-            key: "sign-out",
+            key: 'sign-out',
             icon: <LogoutOutlined />,
             label: <span onClick={handleSignOut}>Sign Out</span>,
         },
@@ -54,11 +54,11 @@ function AppHeader() {
 
     const unauthenticatedMenuItems = [
         {
-            key: "sign-in",
+            key: 'sign-in',
             label: <Link to="/signin">Sign In</Link>,
         },
         {
-            key: "register",
+            key: 'register',
             label: <Link to="/register">Register</Link>,
         },
     ];
@@ -69,18 +69,18 @@ function AppHeader() {
 
     return (
         <Header>
-            <h1 style={{ color: "white" }}>Chat app 🔥</h1>
+            <h1 style={{ color: 'white' }}>Chat app 🔥</h1>
             <Dropdown menu={{ items }}>
-                <a
+                <div
                     className="ant-dropdown-link"
                     onClick={(e) => e.preventDefault()}
-                    style={{ color: "white" }}
+                    style={{ color: 'white' }}
                 >
                     <Space>
-                        {auth.currentUser ? auth.currentUser.email : "Menu"}
+                        {auth.currentUser ? auth.currentUser.email : 'Menu'}
                         <DownOutlined />
                     </Space>
-                </a>
+                </div>
             </Dropdown>
         </Header>
     );

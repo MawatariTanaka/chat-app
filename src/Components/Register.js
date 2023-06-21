@@ -1,17 +1,17 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { collection, setDoc, doc } from "firebase/firestore";
-import { auth, db } from "../App";
-import { ChatContext } from "../Context/chatContext";
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { collection, setDoc, doc } from 'firebase/firestore';
+import { auth, db } from '../App';
+import { ChatContext } from '../Context/chatContext';
 
 export default function Register() {
     const { dispatch } = useContext(ChatContext);
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -21,20 +21,21 @@ export default function Register() {
                 await updateProfile(user, {
                     displayName: username,
                 });
-                const userRef = doc(db, "users", user.uid);
+                const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
-                    id: user.uid,
-                    email: user.email,
-                    username: username,
-                    photoURL: "",
                     ban: [],
+                    email: user.email,
+                    id: user.uid,
+                    photoURL: '',
+                    point: 100,
+                    username: username,
                 });
-                dispatch({ type: "RESET" });
-                navigate("/");
+                dispatch({ type: 'RESET' });
+                navigate('/');
             })
             .catch((error) => {
-                if (error.code === "auth/email-already-in-use") {
-                    setError("Email already in use.");
+                if (error.code === 'auth/email-already-in-use') {
+                    setError('Email already in use.');
                 } else {
                     setError(error.message);
                 }
@@ -43,7 +44,7 @@ export default function Register() {
 
     return (
         <form className="auth-form" onSubmit={handleRegister}>
-            <h2 style={{ gridColumn: "1 / span 2" }}>Register</h2>
+            <h2 style={{ gridColumn: '1 / span 2' }}>Register</h2>
 
             <label className="auth-label" htmlFor="email">
                 Email:
@@ -79,7 +80,7 @@ export default function Register() {
                 onChange={(e) => setPassword(e.target.value)}
             />
             {error && (
-                <div style={{ color: "pink", gridColumn: "1 / span 2" }}>
+                <div style={{ color: 'pink', gridColumn: '1 / span 2' }}>
                     {error}
                 </div>
             )}
