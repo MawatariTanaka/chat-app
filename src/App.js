@@ -30,6 +30,11 @@ export { app, auth, db };
 function PrivateRoute({ user, element }) {
     return user ? element : <Navigate to="/signin" />;
 }
+
+function PrivateProfile({ user, element }) {
+    return user ? element : <Navigate to="/signin" />;
+}
+
 function App() {
     const [user, setUser] = useState(null);
 
@@ -55,20 +60,18 @@ function App() {
                         element={
                             <PrivateRoute
                                 user={user}
-                                element={
-                                    <>
-                                        <Route
-                                            path="/profile"
-                                            element={<Profile />}
-                                        />
-                                        <Chatroom user={user} />
-                                    </>
-                                }
+                                element={<Chatroom user={user} />}
                             />
                         }
                     />
                     <Route path="/register" element={<Register />} />
                     <Route path="/signin" element={<SignIn />} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <PrivateProfile user={user} element={<Profile />} />
+                        }
+                    />
                 </Routes>
             </main>
         </div>
