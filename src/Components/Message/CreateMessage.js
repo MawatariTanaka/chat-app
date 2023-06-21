@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
-import { Form, Input, Select, Switch, Button } from "antd";
-import { v4 as uuidv4 } from "uuid";
-import { auth, db } from "../../App";
+import React, { useState, useContext } from 'react';
+import { Form, Input, Select, Switch, Button } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
+import { auth, db } from '../../App';
 import {
     collection,
     query,
@@ -10,25 +10,27 @@ import {
     getDocs,
     setDoc,
     serverTimestamp,
-} from "firebase/firestore";
-import { ChatContext } from "../../Context/chatContext";
+} from 'firebase/firestore';
+import { ChatContext } from '../../Context/chatContext';
 
 const { Option } = Select;
 
 export default function CreateMessage() {
     const [form] = Form.useForm();
     const [options, setOptions] = useState([]);
-    const [roomName, setRoomName] = useState("");
-    const [otherPlayer, setOtherPlayer] = useState(["", ""]);
+    const [roomName, setRoomName] = useState('');
+    const [otherPlayer, setOtherPlayer] = useState(['', '']);
     const [privateRoom, setPrivateRoom] = useState(false);
     const { dispatch } = useContext(ChatContext);
 
     const onFinish = async () => {
         const currentBan = await getDoc(
-            doc(db, "users", auth.currentUser.uid)
+            doc(db, 'users', auth.currentUser.uid)
         ).then((doc) => {
             if (doc.exists()) {
-                return doc.data().ban || ["0"];
+                const fullBan = doc.data().ban || [];
+                const chatBan = doc.data().ban_chat || [];
+                return { fullBan, chatBan };
             } else {
                 throw new Error(
                     `No user found with uid ${auth.currentUser.uid}`
@@ -37,7 +39,7 @@ export default function CreateMessage() {
         });
 
         const otherPlayerName = await getDoc(
-            doc(db, "users", otherPlayer)
+            doc(db, 'users', otherPlayer)
         ).then((doc) => {
             if (doc.exists()) {
                 return doc.data().username;
@@ -49,7 +51,8 @@ export default function CreateMessage() {
         const timestamp = serverTimestamp();
 
         const roomData = {
-            ban: currentBan,
+            ban: currentBan.fullBan,
+            ban_chat: currentBan.chatBan,
             coverPhotoURL: auth.currentUser.photoURL,
             createdAt: timestamp,
             host: auth.currentUser.displayName,
@@ -68,16 +71,16 @@ export default function CreateMessage() {
             roomName: roomName,
         };
 
-        await setDoc(doc(db, "rooms", roomId), roomData).then(() => {
+        await setDoc(doc(db, 'rooms', roomId), roomData).then(() => {
             dispatch({
-                type: "CHANGE_ROOM",
+                type: 'CHANGE_ROOM',
                 payload: roomId,
             });
         });
     };
 
     const onSearch = async (value) => {
-        const q = query(collection(db, "users"));
+        const q = query(collection(db, 'users'));
         const querySnapshot = await getDocs(q);
         const newOptions = querySnapshot.docs.slice(0, 5).map((doc) => ({
             label: doc.data().username,

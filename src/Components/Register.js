@@ -24,6 +24,7 @@ export default function Register() {
                 const userRef = doc(db, 'users', user.uid);
                 await setDoc(userRef, {
                     ban: [],
+                    ban_chat: [],
                     email: user.email,
                     id: user.uid,
                     photoURL: '',
