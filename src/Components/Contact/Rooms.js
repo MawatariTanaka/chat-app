@@ -9,7 +9,7 @@ import {
     query,
     or,
     and,
-} from "firebase/firestore"; // updated import
+} from "firebase/firestore";
 import { auth, db } from "../../App";
 import { ChatContext } from "../../Context/chatContext";
 
@@ -33,12 +33,15 @@ export default function Rooms() {
                 )
             )
         );
+
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const rooms = querySnapshot.docs.map((doc) => {
-                const data = doc.data();
-                data.id = doc.id;
-                return data;
-            });
+            const rooms = querySnapshot.docs
+                .filter((doc) => !doc.data().ban.includes(auth.currentUser.uid))
+                .map((doc) => {
+                    const data = doc.data();
+                    data.id = doc.id;
+                    return data;
+                });
             setAvailableRooms(rooms);
         });
 

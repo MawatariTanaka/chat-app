@@ -11,7 +11,9 @@ export default function CurrentMessage() {
     const { currentRoomId, dispatch } = useContext(ChatContext);
     const [roomName, setRoomName] = useState("");
     const [messages, setMessages] = useState([]);
+    const [banChat, setBanChat] = useState([]);
     const [text, setText] = useState("");
+
     useEffect(() => {
         const roomRef = doc(db, "rooms", currentRoomId);
         onSnapshot(roomRef, (doc) => {
@@ -24,6 +26,7 @@ export default function CurrentMessage() {
             }
             setRoomName(roomData.roomName);
             setMessages(roomData.messages);
+            setBanChat(roomData.ban_chat);
         });
     }, [currentRoomId]);
 
@@ -73,27 +76,29 @@ export default function CurrentMessage() {
                         </div>
                     ))}
             </Content>
-            <Footer
-                style={{
-                    position: "sticky",
-                    bottom: 0,
-                }}
-            >
-                <form
-                    onSubmit={handleSubmit}
-                    style={{ display: "flex", flex: 1 }}
+            {banChat.includes(auth.currentUser.uid) ? null : (
+                <Footer
+                    style={{
+                        position: "sticky",
+                        bottom: 0,
+                    }}
                 >
-                    <Input
-                        placeholder="Type your message here"
-                        value={text}
-                        onChange={(event) => setText(event.target.value)}
-                        style={{ marginRight: "10px" }}
-                    />
-                    <Button type="primary" htmlType="submit">
-                        Send
-                    </Button>
-                </form>
-            </Footer>
+                    <form
+                        onSubmit={handleSubmit}
+                        style={{ display: "flex", flex: 1 }}
+                    >
+                        <Input
+                            placeholder="Type your message here"
+                            value={text}
+                            onChange={(event) => setText(event.target.value)}
+                            style={{ marginRight: "10px" }}
+                        />
+                        <Button type="primary" htmlType="submit">
+                            Send
+                        </Button>
+                    </form>
+                </Footer>
+            )}
         </Layout>
     );
 }
