@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { List, Avatar, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useContext } from 'react';
+import { List, Avatar, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import {
     collection,
     where,
@@ -9,9 +9,9 @@ import {
     query,
     or,
     and,
-} from "firebase/firestore";
-import { auth, db } from "../../App";
-import { ChatContext } from "../../Context/chatContext";
+} from 'firebase/firestore';
+import { auth, db } from '../../App';
+import { ChatContext } from '../../Context/chatContext';
 
 export default function Rooms() {
     const [availableRooms, setAvailableRooms] = useState([]);
@@ -24,12 +24,12 @@ export default function Rooms() {
         }
 
         const q = query(
-            collection(db, "rooms"),
+            collection(db, 'rooms'),
             and(
                 or(
-                    where("host_id", "==", userId),
-                    where("player_id", "==", userId),
-                    where("private", "==", false)
+                    where('host_id', '==', userId),
+                    where('player_id', '==', userId),
+                    where('private', '==', false)
                 )
             )
         );
@@ -53,11 +53,11 @@ export default function Rooms() {
             <Button
                 type="primary"
                 icon={<PlusOutlined />}
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 onClick={() => {
                     dispatch({
-                        type: "CHANGE_ROOM",
-                        payload: "add-room",
+                        type: 'CHANGE_ROOM',
+                        payload: 'add-room',
                     });
                 }}
             >
@@ -70,13 +70,13 @@ export default function Rooms() {
                     <List.Item
                         className="list-room"
                         style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "left",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
                         }}
                         onClick={() => {
                             dispatch({
-                                type: "CHANGE_ROOM",
+                                type: 'CHANGE_ROOM',
                                 payload: id,
                             });
                         }}
@@ -84,17 +84,17 @@ export default function Rooms() {
                         <Avatar
                             src={coverPhotoURL}
                             size={32}
-                            style={{ margin: "0 1rem" }}
+                            style={{ margin: '0 1rem' }}
                         />
-                        <div style={{ color: "white" }}>
+                        <div style={{ color: 'white' }}>
                             <div style={{ fontWeight: 700 }}>
-                                {host.length > 10
-                                    ? `${host.slice(0, 10)}...`
+                                {host.length > 8
+                                    ? `${host.slice(0, 8)}...`
                                     : host}
                             </div>
                             <div>
-                                {roomName.length > 10
-                                    ? `${roomName.slice(0, 10)}...`
+                                {roomName.length > 8
+                                    ? `${roomName.slice(0, 8)}...`
                                     : roomName}
                             </div>
                         </div>
